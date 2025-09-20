@@ -190,7 +190,7 @@ export function AppHeader() {
     <>
       <header 
         role="banner" 
-        className="sticky top-0 z-50 h-16 w-full bg-background border-b border-border shadow-sm rounded-b-3xl"
+        className="sticky top-0 z-50 h-16 w-full bg-background border-b border-border shadow-sm rounded-b-[2rem]"
       >
         <div className="flex items-center justify-between h-full px-4 sm:px-6 lg:px-8">
           {/* Zona Esquerda - Logo + Menu Principal */}
