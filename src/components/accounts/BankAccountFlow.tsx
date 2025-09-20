@@ -191,10 +191,10 @@ export function BankAccountFlow({ onClose, onSubmit }: BankAccountFlowProps) {
           </div>
 
           {/* Step Content */}
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             {step === 1 && (
               <div>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
                   {banks.map((bank) => (
                     <Card
                       key={bank.name}
@@ -206,8 +206,8 @@ export function BankAccountFlow({ onClose, onSubmit }: BankAccountFlowProps) {
                       }}
                       onClick={() => setFormData({ ...formData, bank_name: bank.name })}
                     >
-                      <CardContent className="p-4 text-center">
-                        <div className="flex justify-center mb-3">
+                      <CardContent className="p-6 text-center">
+                        <div className="flex justify-center mb-4">
                           <BankLogo bankName={bank.name} size="lg" />
                         </div>
                         <h3 className="font-semibold text-foreground mb-1">{bank.name}</h3>
