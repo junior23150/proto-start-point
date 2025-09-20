@@ -61,11 +61,28 @@ export function BankLogo({
   className = "",
 }: BankLogoProps) {
   const [imageError, setImageError] = React.useState(false);
+  const [currentPath, setCurrentPath] = React.useState(0);
   const imageFile = bankImageFiles[bankName];
   const fallbackColor = bankFallbackColors[bankName] || "#6B7280";
   const initials = bankInitials[bankName] || "?";
 
-  // Se não há arquivo de imagem mapeado ou houve erro, mostra fallback
+  // Diferentes caminhos para tentar no Lovable
+  const imagePaths = [
+    `/bank-logos/${imageFile}`,
+    `./bank-logos/${imageFile}`,
+    `/public/bank-logos/${imageFile}`,
+    `./public/bank-logos/${imageFile}`,
+  ];
+
+  const handleImageError = () => {
+    if (currentPath < imagePaths.length - 1) {
+      setCurrentPath(currentPath + 1);
+    } else {
+      setImageError(true);
+    }
+  };
+
+  // Se não há arquivo de imagem mapeado ou houve erro em todos os caminhos, mostra fallback
   if (!imageFile || imageError) {
     return (
       <div
@@ -97,10 +114,10 @@ export function BankLogo({
       className={`${sizeClasses[size]} rounded-full overflow-hidden ${className}`}
     >
       <img
-        src={`/bank-logos/${imageFile}`}
+        src={imagePaths[currentPath]}
         alt={`Logo ${bankName}`}
         className="w-full h-full object-cover"
-        onError={() => setImageError(true)}
+        onError={handleImageError}
         onLoad={() => setImageError(false)}
       />
     </div>
