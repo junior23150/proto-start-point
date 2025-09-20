@@ -133,9 +133,14 @@ export function TransactionsPage() {
       (transaction.category && 
         transaction.category.toLowerCase().includes(searchTerm.toLowerCase()));
     
+    // Normalizar datas para comparação (apenas data, sem horário)
+    const transactionDateOnly = new Date(transactionDate.getFullYear(), transactionDate.getMonth(), transactionDate.getDate());
+    const fromDateOnly = new Date(dateRange.from.getFullYear(), dateRange.from.getMonth(), dateRange.from.getDate());
+    const toDateOnly = new Date(dateRange.to.getFullYear(), dateRange.to.getMonth(), dateRange.to.getDate());
+    
     const matchesDateRange = 
-      transactionDate >= dateRange.from && 
-      transactionDate <= dateRange.to;
+      transactionDateOnly >= fromDateOnly && 
+      transactionDateOnly <= toDateOnly;
     
     const matchesFilter = 
       activeFilter === "all" || 
@@ -231,7 +236,11 @@ export function TransactionsPage() {
   // Apply date filter
   const applyDateFilter = () => {
     if (showCustomRange && customRangeFrom && customRangeTo) {
-      setDateRange({ from: customRangeFrom, to: customRangeTo });
+      // Garantir que a data inicial seja o início do dia e a final seja o fim do dia
+      const fromDate = new Date(customRangeFrom.getFullYear(), customRangeFrom.getMonth(), customRangeFrom.getDate(), 0, 0, 0, 0);
+      const toDate = new Date(customRangeTo.getFullYear(), customRangeTo.getMonth(), customRangeTo.getDate(), 23, 59, 59, 999);
+      
+      setDateRange({ from: fromDate, to: toDate });
       setDateLabel(`${format(customRangeFrom, "dd/MM/yyyy", { locale: pt })} - ${format(customRangeTo, "dd/MM/yyyy", { locale: pt })}`);
     } else {
       setDateRange(tempDateRange);
@@ -423,6 +432,15 @@ export function TransactionsPage() {
                           />
                         </div>
                       </div>
+                      {showCustomRange && (
+                        <div className="px-4 pb-3 text-center">
+                          <p className="text-xs text-muted-foreground">
+                            {!customRangeFrom && !customRangeTo && "Selecione a data inicial e final"}
+                            {customRangeFrom && !customRangeTo && "Agora selecione a data final"}
+                            {customRangeFrom && customRangeTo && "Datas selecionadas! Clique em Filtrar"}
+                          </p>
+                        </div>
+                      )}
                     ) : (
                       <CalendarComponent
                         mode="range"
@@ -480,7 +498,8 @@ export function TransactionsPage() {
                     <Button
                       size="sm"
                       onClick={applyDateFilter}
-                      className="flex-1 bg-knumbers-purple hover:bg-knumbers-purple/90 text-white"
+                      disabled={showCustomRange && (!customRangeFrom || !customRangeTo)}
+                      className="flex-1 bg-knumbers-purple hover:bg-knumbers-purple/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Filtrar
                     </Button>
