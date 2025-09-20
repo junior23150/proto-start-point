@@ -206,11 +206,7 @@ export function BankAccountFlow({ onClose, onSubmit }: BankAccountFlowProps) {
                       }}
                       onClick={() => setFormData({ ...formData, bank_name: bank.name })}
                     >
-<<<<<<< HEAD
-                      <CardContent className="p-8 text-center min-h-[160px] flex flex-col justify-center">
-=======
                       <CardContent className="p-12 text-center min-h-[200px] flex flex-col justify-center">
->>>>>>> 2980311 (feat: remove todos os dados mockados e usa apenas dados reais do Supabase)
                         <div className="flex justify-center mb-4">
                           <BankLogo bankName={bank.name} size="lg" />
                         </div>
