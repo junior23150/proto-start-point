@@ -25,13 +25,7 @@ interface TransferSlideInProps {
   onClose: () => void;
 }
 
-// Mock data para contas
-const mockAccounts = [
-  { id: "1", name: "Nubank", balance: 2500.5 },
-  { id: "2", name: "Santander", balance: 1200.0 },
-  { id: "3", name: "Caixa", balance: 800.75 },
-  { id: "4", name: "Itaú", balance: 1500.25 },
-];
+// Dados mockados removidos - usando apenas dados reais do Supabase
 
 export function TransferSlideIn({ onClose }: TransferSlideInProps) {
   const [sourceAccount, setSourceAccount] = useState("");
@@ -123,8 +117,8 @@ export function TransferSlideIn({ onClose }: TransferSlideInProps) {
   };
 
   const getAccountBalance = (accountId: string) => {
-    const account = mockAccounts.find(acc => acc.id === accountId);
-    return account ? account.balance : 0;
+    // TODO: Implementar busca de saldo real do Supabase
+    return 0;
   };
 
   return (
@@ -174,11 +168,7 @@ export function TransferSlideIn({ onClose }: TransferSlideInProps) {
                     <SelectValue placeholder="Selecione" />
                   </SelectTrigger>
                   <SelectContent>
-                    {mockAccounts.map((account) => (
-                      <SelectItem key={account.id} value={account.id}>
-                        {account.name}
-                      </SelectItem>
-                    ))}
+                    {/* TODO: Carregar contas reais do Supabase */}
                   </SelectContent>
                 </Select>
                 {sourceAccount && (
@@ -197,13 +187,7 @@ export function TransferSlideIn({ onClose }: TransferSlideInProps) {
                     <SelectValue placeholder="Selecione" />
                   </SelectTrigger>
                   <SelectContent>
-                    {mockAccounts
-                      .filter(account => account.id !== sourceAccount)
-                      .map((account) => (
-                        <SelectItem key={account.id} value={account.id}>
-                          {account.name}
-                        </SelectItem>
-                      ))}
+                    {/* TODO: Carregar contas reais do Supabase */}
                   </SelectContent>
                 </Select>
                 {destinationAccount && (

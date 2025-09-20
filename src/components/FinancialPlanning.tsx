@@ -84,77 +84,9 @@ const months = [
 export function FinancialPlanning() {
   const [selectedMonth, setSelectedMonth] = useState("Outubro");
   const [formStep, setFormStep] = useState(1);
-  const [entries, setEntries] = useState([
-    {
-      id: 1,
-      date: "10/10/2025",
-      description: "Salário",
-      category: "salario",
-      value: 5000.0,
-      spent: 0.0,
-      available: 5000.0,
-      type: "Débito",
-      notes: "",
-    },
-    {
-      id: 2,
-      date: "15/10/2025",
-      description: "Freelance",
-      category: "freelance",
-      value: 1500.0,
-      spent: 0.0,
-      available: 1500.0,
-      type: "Crédito",
-      notes: "",
-    },
-  ]);
+  const [entries, setEntries] = useState([]);
 
-  const [expenses, setExpenses] = useState([
-    {
-      id: 1,
-      date: "10/10/2025",
-      description: "Aluguel",
-      category: "moradia",
-      planned: 750.0,
-      spent: 0.0,
-      available: 750.0,
-      type: "Débito",
-      notes: "",
-    },
-    {
-      id: 2,
-      date: "10/10/2025",
-      description: "Água",
-      category: "moradia",
-      planned: 100.0,
-      spent: 100.0,
-      available: 0.0,
-      type: "Débito",
-      notes: "",
-    },
-    {
-      id: 3,
-      date: "10/10/2025",
-      description: "Internet",
-      category: "moradia",
-      planned: 100.0,
-      spent: 100.0,
-      available: 0.0,
-      type: "Débito",
-      notes: "",
-    },
-    {
-      id: 4,
-      date: "10/10/2025",
-      description: "Supermercado",
-      category: "alimentacao",
-      planned: 800.0,
-      spent: 100.0,
-      available: 700.0,
-      type: "Crédito",
-      notes: "",
-    },
-  ]);
+  const [expenses, setExpenses] = useState([]);
 
   const [entryForm, setEntryForm] = useState({
     description: "",

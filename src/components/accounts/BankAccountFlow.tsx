@@ -191,10 +191,10 @@ export function BankAccountFlow({ onClose, onSubmit }: BankAccountFlowProps) {
           </div>
 
           {/* Step Content */}
-          <div className="max-w-7xl mx-auto px-4">
+          <div className="w-full px-12">
             {step === 1 && (
               <div>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-12 mb-8 w-full">
                   {banks.map((bank) => (
                     <Card
                       key={bank.name}
@@ -206,7 +206,11 @@ export function BankAccountFlow({ onClose, onSubmit }: BankAccountFlowProps) {
                       }}
                       onClick={() => setFormData({ ...formData, bank_name: bank.name })}
                     >
+<<<<<<< HEAD
                       <CardContent className="p-8 text-center min-h-[160px] flex flex-col justify-center">
+=======
+                      <CardContent className="p-12 text-center min-h-[200px] flex flex-col justify-center">
+>>>>>>> 2980311 (feat: remove todos os dados mockados e usa apenas dados reais do Supabase)
                         <div className="flex justify-center mb-4">
                           <BankLogo bankName={bank.name} size="lg" />
                         </div>

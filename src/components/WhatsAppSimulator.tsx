@@ -14,15 +14,7 @@ interface Message {
 }
 
 export function WhatsAppSimulator() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      text: 'Olá! Sou a IA do GranaZen 🤖💰\n\nEnvie seus gastos por texto, áudio ou foto que eu organizo tudo!\n\nExemplo: "Gastei R$ 25 no almoço no restaurante"',
-      isUser: false,
-      timestamp: new Date(),
-      type: 'text'
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const { toast } = useToast();

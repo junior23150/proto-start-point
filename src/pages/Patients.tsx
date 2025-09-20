@@ -34,98 +34,17 @@ interface Patient {
   age?: number; // Adicionado para aniversariantes
 }
 
-const mockPatients: Patient[] = [
-  {
-    id: "001",
-    code: "001",
-    name: "Maria Silva Santos",
-    clienteSince: "15/01/2020",
-    fantasia: "Consultório Maria Silva",
-    cpfCnpj: "123.456.789-00",
-    email: "maria@email.com",
-    city: "São Paulo",
-    cep: "01234-567",
-    phone: "(11) 99999-9999",
-    proximaVisita: "25/12/2024",
-    observacoes: "Paciente com histórico de hipertensão",
-    dateOfBirth: "15/03/1985",
-    age: 39
-  },
-  {
-    id: "002", 
-    code: "002",
-    name: "João Pedro Oliveira",
-    clienteSince: "20/03/2021",
-    fantasia: "Clínica João Pedro",
-    cpfCnpj: "987.654.321-00",
-    email: "joao@email.com",
-    city: "Rio de Janeiro",
-    cep: "20000-000",
-    phone: "(21) 88888-8888",
-    proximaVisita: "15/01/2025",
-    observacoes: "Consulta de rotina",
-    dateOfBirth: "12/07/1990",
-    age: 34
-  },
-  {
-    id: "003",
-    code: "003", 
-    name: "Ana Carolina Ferreira",
-    clienteSince: "10/07/2019",
-    fantasia: "Centro Médico Ana",
-    cpfCnpj: "456.789.123-00",
-    email: "ana@email.com",
-    city: "Belo Horizonte",
-    cep: "30000-000",
-    phone: "(31) 77777-7777",
-    proximaVisita: "30/12/2024",
-    observacoes: "Acompanhamento especializado",
-    dateOfBirth: "22/07/1988",
-    age: 36
-  },
-  {
-    id: "004",
-    code: "004",
-    name: "Carlos Roberto Lima",
-    clienteSince: "05/11/2022", 
-    fantasia: "Consultório Carlos Roberto",
-    cpfCnpj: "789.123.456-00",
-    email: "carlos@email.com",
-    city: "Salvador",
-    cep: "40000-000",
-    phone: "(71) 66666-6666",
-    proximaVisita: "10/02/2025",
-    observacoes: "Paciente diabético",
-    dateOfBirth: "08/03/1975",
-    age: 49
-  },
-  {
-    id: "005",
-    code: "005",
-    name: "Fernanda Souza Costa",
-    clienteSince: "18/09/2020",
-    fantasia: "Clínica Fernanda",
-    cpfCnpj: "321.654.987-00",
-    email: "fernanda@email.com", 
-    city: "Brasília",
-    cep: "70000-000",
-    phone: "(61) 55555-5555",
-    proximaVisita: "20/01/2025",
-    observacoes: "Acompanhamento preventivo",
-    dateOfBirth: "14/07/1992",
-    age: 32
-  }
-];
+// Dados mockados removidos - usando apenas dados reais do Supabase
 
 const Patients = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPatients, setSelectedPatients] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [filteredPatients, setFilteredPatients] = useState(mockPatients);
+  const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [moreActionsOpen, setMoreActionsOpen] = useState(false);
-  const [patients, setPatients] = useState(mockPatients);
+  const [patients, setPatients] = useState<Patient[]>([]);
   const [groupDialogOpen, setGroupDialogOpen] = useState(false);
   const [birthdayDialogOpen, setBirthdayDialogOpen] = useState(false);
   const [groupBy, setGroupBy] = useState("estados");

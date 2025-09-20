@@ -23,7 +23,7 @@ const categoryColors: { [key: string]: string } = {
 };
 
 export function CategoryPieCard({ transactions }: CategoryPieCardProps) {
-  // Process transactions to get category data or use mock data
+  // Process transactions to get category data
   const getCategoryData = () => {
     const categoryTotals: { [key: string]: number } = {};
     
@@ -37,14 +37,6 @@ export function CategoryPieCard({ transactions }: CategoryPieCardProps) {
           const category = transaction.category.toLowerCase();
           categoryTotals[category] = (categoryTotals[category] || 0) + Number(transaction.amount);
         });
-    } else {
-      // Mock data for demonstration
-      categoryTotals['alimentação'] = 1200.50;
-      categoryTotals['transporte'] = 850.30;
-      categoryTotals['moradia'] = 2200.00;
-      categoryTotals['lazer'] = 450.80;
-      categoryTotals['saúde'] = 320.25;
-      categoryTotals['vestuário'] = 280.90;
     }
 
     const total = Object.values(categoryTotals).reduce((sum, value) => sum + value, 0);

@@ -53,13 +53,7 @@ interface Transaction {
   updated_at: string;
 }
 
-// Mock data para contas (será substituído por dados reais no futuro)
-const mockAccounts = [
-  { id: "1", name: "Nubank", balance: 2500.5 },
-  { id: "2", name: "Santander", balance: 1200.0 },
-  { id: "3", name: "Caixa", balance: 800.75 },
-  { id: "4", name: "Itaú", balance: 1500.25 },
-];
+// Dados mockados removidos - usando apenas dados reais do Supabase
 
 export function TransactionsPage() {
   const [selectedAccount, setSelectedAccount] = useState("all");
@@ -159,9 +153,7 @@ export function TransactionsPage() {
     .filter((t) => t.transaction_type === "expense")
     .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
-  const currentAccountBalance = selectedAccount === "all" 
-    ? mockAccounts.reduce((sum, acc) => sum + acc.balance, 0)
-    : (mockAccounts.find(acc => acc.id === selectedAccount)?.balance || 0);
+  const currentAccountBalance = 0; // TODO: Calcular saldo real das contas do Supabase
 
   // Calcular valor das transações selecionadas corretamente (receitas - despesas)
   const selectedTransactionsValue = selectedTransactions.reduce((sum, id) => {
@@ -379,11 +371,7 @@ export function TransactionsPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todas as contas</SelectItem>
-                    {mockAccounts.map((account) => (
-                      <SelectItem key={account.id} value={account.id}>
-                        {account.name}
-                      </SelectItem>
-                    ))}
+                    {/* TODO: Carregar contas reais do Supabase */}
                   </SelectContent>
                 </Select>
               </div>
