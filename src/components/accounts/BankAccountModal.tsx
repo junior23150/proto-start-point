@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, ArrowRight, Check, Building2 } from "lucide-react"
+import { BankLogo } from "@/components/ui/BankLogo"
 
 interface BankAccountModalProps {
   isOpen: boolean
@@ -122,12 +123,7 @@ export function BankAccountModal({ isOpen, onClose, onSubmit }: BankAccountModal
                   onClick={() => setFormData({ ...formData, bankName: bank.name })}
                 >
                   <CardContent className="p-4 flex items-center space-x-3">
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold"
-                      style={{ backgroundColor: bank.color }}
-                    >
-                      <Building2 className="h-5 w-5" />
-                    </div>
+                    <BankLogo bankName={bank.name} size="md" />
                     <span className="font-medium">{bank.name}</span>
                     {formData.bankName === bank.name && <Check className="h-5 w-5 text-primary ml-auto" />}
                   </CardContent>

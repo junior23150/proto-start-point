@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Plus, CreditCard, Building2, Calendar } from "lucide-react"
+import { BankLogo } from "@/components/ui/BankLogo"
 import { BankAccountFlow } from "@/components/accounts/BankAccountFlow"
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout"
 import { useSearchParams } from "react-router-dom"
@@ -140,12 +141,7 @@ function AccountsContent({
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: account.color }}
-                    >
-                      <Building2 className="h-5 w-5 text-white" />
-                    </div>
+                    <BankLogo bankName={account.bank_name} size="md" />
                     <div>
                       <CardTitle className="text-lg">{account.bank_name}</CardTitle>
                       <CardDescription>{account.account_type}</CardDescription>
