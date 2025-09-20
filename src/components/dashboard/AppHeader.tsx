@@ -48,8 +48,9 @@ interface MenuSection {
   title: string;
   items: {
     title: string;
-    url: string;
-    icon: React.ComponentType<{ className?: string }>;
+    url?: string;
+    icon?: React.ComponentType<{ className?: string }>;
+    isHeader?: boolean;
   }[];
 }
 
@@ -90,8 +91,9 @@ const getMenuSections = (workspace: string): Record<string, MenuSection> => {
       cadastros: {
         title: "Cadastros",
         items: [
-          { title: "Contas Bancárias", url: "/contas", icon: CreditCard },
-          { title: "Categorias", url: "/categorias", icon: Target },
+          { title: "Cadastros", isHeader: true },
+          { title: "Contas Bancárias", url: "/contas" },
+          { title: "Categorias", url: "/categorias" },
         ],
       },
       financeiro: {
@@ -174,7 +176,7 @@ export function AppHeader() {
   const menuSections = getMenuSections(workspace);
   
   const isDropdownActive = (sectionKey: string) => {
-    return menuSections[sectionKey].items.some(item => isActiveRoute(item.url));
+    return menuSections[sectionKey].items.some(item => item.url && isActiveRoute(item.url));
   };
 
   const handleDropdownClick = (sectionKey: string) => {
@@ -188,23 +190,36 @@ export function AppHeader() {
         className="absolute top-full left-0 mt-1 w-64 bg-popover border border-border rounded-lg shadow-lg z-50 py-2"
         data-dropdown
       >
-        {section.items.map((item) => (
-          <NavLink
-            key={item.title}
-            to={item.url}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground ${
-                isActive 
-                  ? "bg-accent text-accent-foreground font-medium" 
-                  : "text-popover-foreground"
-              }`
-            }
-            onClick={() => setOpenDropdown(null)}
-          >
-            <item.icon className="h-4 w-4" />
-            {item.title}
-          </NavLink>
-        ))}
+        {section.items.map((item) => {
+          if (item.isHeader) {
+            return (
+              <div
+                key={item.title}
+                className="px-4 py-2 text-sm font-bold text-popover-foreground border-b border-border/50 mb-1"
+              >
+                {item.title}
+              </div>
+            );
+          }
+          
+          return (
+            <NavLink
+              key={item.title}
+              to={item.url!}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground ${
+                  isActive 
+                    ? "bg-accent text-accent-foreground font-medium" 
+                    : "text-popover-foreground"
+                }`
+              }
+              onClick={() => setOpenDropdown(null)}
+            >
+              {item.icon && <item.icon className="h-4 w-4" />}
+              {item.title}
+            </NavLink>
+          );
+        })}
       </div>
     );
   };
@@ -285,23 +300,36 @@ export function AppHeader() {
                         {section.title}
                       </h3>
                       <div className="space-y-1">
-                        {section.items.map((item) => (
-                          <NavLink
-                            key={item.title}
-                            to={item.url}
-                            className={({ isActive }) =>
-                              `flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-colors ${
-                                isActive
-                                  ? "bg-primary text-primary-foreground"
-                                  : "text-foreground hover:bg-muted"
-                              }`
-                            }
-                            onClick={() => setIsMobileMenuOpen(false)}
-                          >
-                            <item.icon className="h-4 w-4" />
-                            {item.title}
-                          </NavLink>
-                        ))}
+                        {section.items.map((item) => {
+                          if (item.isHeader) {
+                            return (
+                              <div
+                                key={item.title}
+                                className="px-3 py-2 text-sm font-bold text-foreground border-b border-border/50 mb-1"
+                              >
+                                {item.title}
+                              </div>
+                            );
+                          }
+                          
+                          return (
+                            <NavLink
+                              key={item.title}
+                              to={item.url!}
+                              className={({ isActive }) =>
+                                `flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-colors ${
+                                  isActive
+                                    ? "bg-primary text-primary-foreground"
+                                    : "text-foreground hover:bg-muted"
+                                }`
+                              }
+                              onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                              {item.icon && <item.icon className="h-4 w-4" />}
+                              {item.title}
+                            </NavLink>
+                          );
+                        })}
                       </div>
                     </div>
                   ))}
