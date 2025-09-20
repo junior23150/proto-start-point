@@ -20,9 +20,9 @@ import { useAuth } from "@/contexts/AuthContext";
 export function MainDashboard() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   
-  const userName = user?.email?.split('@')[0] || "Usuário";
+  const userName = profile?.full_name || user?.email?.split('@')[0] || "Usuário";
 
   useEffect(() => {
     if (user) {
@@ -74,7 +74,7 @@ export function MainDashboard() {
       <div className="space-y-2 px-0 sm:px-2">
         <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Dashboard</h1>
         <p className="text-sm sm:text-base text-muted-foreground">
-          Bem-vindo de volta, <span className="font-semibold bg-gradient-to-r from-knumbers-green to-knumbers-purple bg-clip-text text-transparent">{userName}</span>!
+          Bem-vindo, <span className="font-semibold bg-gradient-to-r from-knumbers-green to-knumbers-purple bg-clip-text text-transparent">{userName}</span>!
         </p>
       </div>
 
