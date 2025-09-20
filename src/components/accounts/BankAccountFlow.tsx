@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, ArrowRight, Check, X, CreditCard, Calendar, DollarSign, Sparkles } from "lucide-react"
+import { BankLogo } from "@/components/ui/BankLogo"
 
 interface BankAccountFlowProps {
   onClose: () => void
@@ -206,11 +207,8 @@ export function BankAccountFlow({ onClose, onSubmit }: BankAccountFlowProps) {
                       onClick={() => setFormData({ ...formData, bank_name: bank.name })}
                     >
                       <CardContent className="p-4 text-center">
-                        <div
-                          className="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl mx-auto mb-3 shadow-md"
-                          style={{ backgroundColor: bank.color }}
-                        >
-                          {bank.logo}
+                        <div className="flex justify-center mb-3">
+                          <BankLogo bankName={bank.name} size="lg" />
                         </div>
                         <h3 className="font-semibold text-foreground mb-1">{bank.name}</h3>
                         <p className="text-xs text-muted-foreground mb-3">{bank.description}</p>
