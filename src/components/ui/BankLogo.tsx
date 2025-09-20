@@ -1,24 +1,35 @@
 import React from "react";
 import { Building2 } from "lucide-react";
 
+// Importações das imagens dos logos
+import nubankLogo from "/public/bank-logos/nubank.png";
+import santanderLogo from "/public/bank-logos/santander.png";
+import itauLogo from "/public/bank-logos/itau.png";
+import bancoBrasilLogo from "/public/bank-logos/banco-do-brasil.png";
+import caixaLogo from "/public/bank-logos/caixa.png";
+import sicrediLogo from "/public/bank-logos/sicredi.png";
+import sicoobLogo from "/public/bank-logos/sicoob.png";
+import bradescoLogo from "/public/bank-logos/bradesco.jpg";
+import interLogo from "/public/bank-logos/inter.png";
+
 interface BankLogoProps {
   bankName: string;
   size?: "sm" | "md" | "lg";
   className?: string;
 }
 
-// Mapeamento dos nomes dos bancos para os arquivos de imagem
-const bankImageFiles: Record<string, string> = {
-  Nubank: "nubank.png",
-  Santander: "santander.png",
-  Itaú: "itau.png",
-  "Banco do Brasil": "banco-do-brasil.png",
-  Caixa: "caixa.png",
-  Sicredi: "sicredi.png",
-  Sicoob: "sicoob.png",
-  Bradesco: "bradesco.jpg", // Arquivo é JPG
-  Inter: "inter.png", // Renomeado para minúsculo
-  // "Outros": não há arquivo ainda, usará fallback
+// Mapeamento dos nomes dos bancos para as imagens importadas
+const bankLogos: Record<string, string> = {
+  Nubank: nubankLogo,
+  Santander: santanderLogo,
+  Itaú: itauLogo,
+  "Banco do Brasil": bancoBrasilLogo,
+  Caixa: caixaLogo,
+  Sicredi: sicrediLogo,
+  Sicoob: sicoobLogo,
+  Bradesco: bradescoLogo,
+  Inter: interLogo,
+  // "Outros": não há arquivo, usará fallback
 };
 
 // Cores de fallback para cada banco (caso a imagem não carregue)
@@ -61,29 +72,12 @@ export function BankLogo({
   className = "",
 }: BankLogoProps) {
   const [imageError, setImageError] = React.useState(false);
-  const [currentPath, setCurrentPath] = React.useState(0);
-  const imageFile = bankImageFiles[bankName];
+  const logoSrc = bankLogos[bankName];
   const fallbackColor = bankFallbackColors[bankName] || "#6B7280";
   const initials = bankInitials[bankName] || "?";
 
-  // Diferentes caminhos para tentar no Lovable
-  const imagePaths = [
-    `/bank-logos/${imageFile}`,
-    `./bank-logos/${imageFile}`,
-    `/public/bank-logos/${imageFile}`,
-    `./public/bank-logos/${imageFile}`,
-  ];
-
-  const handleImageError = () => {
-    if (currentPath < imagePaths.length - 1) {
-      setCurrentPath(currentPath + 1);
-    } else {
-      setImageError(true);
-    }
-  };
-
-  // Se não há arquivo de imagem mapeado ou houve erro em todos os caminhos, mostra fallback
-  if (!imageFile || imageError) {
+  // Se não há logo importado ou houve erro, mostra fallback
+  if (!logoSrc || imageError) {
     return (
       <div
         className={`${sizeClasses[size]} rounded-full flex items-center justify-center ${className}`}
@@ -108,16 +102,16 @@ export function BankLogo({
     );
   }
 
-  // Tenta carregar a imagem
+  // Mostra a imagem importada
   return (
     <div
       className={`${sizeClasses[size]} rounded-full overflow-hidden ${className}`}
     >
       <img
-        src={imagePaths[currentPath]}
+        src={logoSrc}
         alt={`Logo ${bankName}`}
         className="w-full h-full object-cover"
-        onError={handleImageError}
+        onError={() => setImageError(true)}
         onLoad={() => setImageError(false)}
       />
     </div>
