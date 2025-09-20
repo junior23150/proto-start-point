@@ -55,14 +55,18 @@ interface MenuSection {
 }
 
 const getMenuSections = (workspace: string): Record<string, MenuSection> => {
-  if (workspace === 'business') {
+  if (workspace === "business") {
     return {
       cadastros: {
         title: "Cadastros",
         items: [
           { title: "Pacientes", url: "/pacientes", icon: Users },
           { title: "Agenda", url: "/agenda", icon: Calendar },
-          { title: "Marcar Consulta", url: "/marcar-consulta", icon: CalendarPlus },
+          {
+            title: "Marcar Consulta",
+            url: "/marcar-consulta",
+            icon: CalendarPlus,
+          },
         ],
       },
       financeiro: {
@@ -70,8 +74,16 @@ const getMenuSections = (workspace: string): Record<string, MenuSection> => {
         items: [
           { title: "Contas", url: "/contas", icon: CreditCard },
           { title: "Transações", url: "/transações", icon: ArrowUpDown },
-          { title: "Planejamento - Empresa", url: "/planejamento-empresa", icon: Building2 },
-          { title: "Planejamento - Pessoal", url: "/planejamento-pessoal", icon: User },
+          {
+            title: "Planejamento - Empresa",
+            url: "/planejamento-empresa",
+            icon: Building2,
+          },
+          {
+            title: "Planejamento - Pessoal",
+            url: "/planejamento-pessoal",
+            icon: User,
+          },
           { title: "Objetivos", url: "/objetivos", icon: Target },
           { title: "Pagamentos", url: "/pagamentos", icon: Receipt },
         ],
@@ -80,7 +92,11 @@ const getMenuSections = (workspace: string): Record<string, MenuSection> => {
         title: "Meu Espaço",
         items: [
           { title: "Organizador", url: "/organizador", icon: FolderKanban },
-          { title: "Falar com Consultoria", url: "/consultoria", icon: MessageCircle },
+          {
+            title: "Falar com Consultoria",
+            url: "/consultoria",
+            icon: MessageCircle,
+          },
           { title: "Configurações", url: "/configuracoes", icon: Settings },
         ],
       },
@@ -100,7 +116,11 @@ const getMenuSections = (workspace: string): Record<string, MenuSection> => {
         title: "Financeiro",
         items: [
           { title: "Transações", url: "/transações", icon: ArrowUpDown },
-          { title: "Planejamento - Pessoal", url: "/planejamento-pessoal", icon: User },
+          {
+            title: "Planejamento - Pessoal",
+            url: "/planejamento-pessoal",
+            icon: User,
+          },
           { title: "Objetivos", url: "/objetivos", icon: Target },
           { title: "Pagamentos", url: "/pagamentos", icon: Receipt },
         ],
@@ -109,7 +129,11 @@ const getMenuSections = (workspace: string): Record<string, MenuSection> => {
         title: "Meu Espaço",
         items: [
           { title: "Organizador", url: "/organizador", icon: FolderKanban },
-          { title: "Falar com Consultoria", url: "/consultoria", icon: MessageCircle },
+          {
+            title: "Falar com Consultoria",
+            url: "/consultoria",
+            icon: MessageCircle,
+          },
           { title: "Configurações", url: "/configuracoes", icon: Settings },
         ],
       },
@@ -133,40 +157,43 @@ export function AppHeader() {
   const handleWorkspaceToggle = () => {
     toggleWorkspace();
     // Navigate to appropriate dashboard
-    if (workspace === 'personal') {
-      navigate('/dashboard-business');
+    if (workspace === "personal") {
+      navigate("/dashboard-business");
     } else {
-      navigate('/dashboard');
+      navigate("/dashboard");
     }
   };
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (openDropdown && !(event.target as Element).closest('[data-dropdown]')) {
+      if (
+        openDropdown &&
+        !(event.target as Element).closest("[data-dropdown]")
+      ) {
         setOpenDropdown(null);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [openDropdown]);
 
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === '/' && !isSearchFocused) {
+      if (event.key === "/" && !isSearchFocused) {
         event.preventDefault();
         searchRef.current?.focus();
       }
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         setOpenDropdown(null);
         searchRef.current?.blur();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isSearchFocused]);
 
   const isActiveRoute = (url: string) => {
@@ -174,9 +201,11 @@ export function AppHeader() {
   };
 
   const menuSections = getMenuSections(workspace);
-  
+
   const isDropdownActive = (sectionKey: string) => {
-    return menuSections[sectionKey].items.some(item => item.url && isActiveRoute(item.url));
+    return menuSections[sectionKey].items.some(
+      (item) => item.url && isActiveRoute(item.url)
+    );
   };
 
   const handleDropdownClick = (sectionKey: string) => {
@@ -186,30 +215,30 @@ export function AppHeader() {
   const renderDropdownMenu = (sectionKey: string) => {
     const section = menuSections[sectionKey];
     return (
-      <div 
-        className="absolute top-full left-0 mt-1 w-64 bg-popover border border-border rounded-lg shadow-lg z-50 py-2"
-        data-dropdown
-      >
+        <div
+          className="absolute top-full left-0 mt-2 w-64 bg-popover border border-border rounded-lg shadow-lg z-50 py-2"
+          data-dropdown
+        >
         {section.items.map((item) => {
           if (item.isHeader) {
             return (
               <div
                 key={item.title}
-                className="px-4 py-2 text-sm font-bold text-popover-foreground border-b border-border/50 mb-1"
+                className="px-4 py-2 text-sm font-bold text-popover-foreground"
               >
                 {item.title}
               </div>
             );
           }
-          
+
           return (
             <NavLink
               key={item.title}
               to={item.url!}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground ${
-                  isActive 
-                    ? "bg-accent text-accent-foreground font-medium" 
+                  isActive
+                    ? "bg-accent text-accent-foreground font-medium"
                     : "text-popover-foreground"
                 }`
               }
@@ -226,19 +255,31 @@ export function AppHeader() {
 
   const getRoleInfo = () => {
     switch (profile?.role) {
-      case 'admin':
-        return { icon: Crown, label: 'Admin', color: 'bg-gradient-to-r from-yellow-500 to-orange-500' };
-      case 'business':
-        return { icon: Building2, label: 'Business', color: 'bg-gradient-to-r from-blue-500 to-indigo-500' };
+      case "admin":
+        return {
+          icon: Crown,
+          label: "Admin",
+          color: "bg-gradient-to-r from-yellow-500 to-orange-500",
+        };
+      case "business":
+        return {
+          icon: Building2,
+          label: "Business",
+          color: "bg-gradient-to-r from-blue-500 to-indigo-500",
+        };
       default:
-        return { icon: User, label: 'Personal', color: 'bg-gradient-to-r from-knumbers-green to-knumbers-purple' };
+        return {
+          icon: User,
+          label: "Personal",
+          color: "bg-gradient-to-r from-knumbers-green to-knumbers-purple",
+        };
     }
   };
 
   return (
     <>
-      <header 
-        role="banner" 
+      <header
+        role="banner"
         className="sticky top-0 z-50 h-16 w-full bg-background border-b border-border shadow-sm rounded-b-[2.5rem]"
       >
         <div className="flex items-center justify-between h-full px-4 sm:px-6 lg:px-8">
@@ -252,7 +293,10 @@ export function AppHeader() {
             </Link>
 
             {/* Menu Principal - Desktop */}
-            <nav aria-label="Menu principal" className="hidden lg:flex items-center gap-6">
+            <nav
+              aria-label="Menu principal"
+              className="hidden lg:flex items-center gap-6"
+            >
               {Object.entries(menuSections).map(([sectionKey, section]) => (
                 <div key={sectionKey} className="relative" data-dropdown>
                   <button
@@ -260,19 +304,21 @@ export function AppHeader() {
                     aria-haspopup="menu"
                     aria-expanded={openDropdown === sectionKey}
                     className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                      isDropdownActive(sectionKey) || openDropdown === sectionKey
+                      isDropdownActive(sectionKey) ||
+                      openDropdown === sectionKey
                         ? "text-primary bg-primary/10"
                         : "text-foreground hover:text-primary hover:bg-muted/50"
                     }`}
                   >
                     {section.title}
-                    <ChevronDown 
+                    <ChevronDown
                       className={`h-3 w-3 transition-transform duration-200 ${
                         openDropdown === sectionKey ? "rotate-180" : ""
-                      }`} 
+                      }`}
                     />
                   </button>
-                  {openDropdown === sectionKey && renderDropdownMenu(sectionKey)}
+                  {openDropdown === sectionKey &&
+                    renderDropdownMenu(sectionKey)}
                 </div>
               ))}
             </nav>
@@ -305,13 +351,13 @@ export function AppHeader() {
                             return (
                               <div
                                 key={item.title}
-                                className="px-3 py-2 text-sm font-bold text-foreground border-b border-border/50 mb-1"
+                                className="px-3 py-2 text-sm font-bold text-foreground"
                               >
                                 {item.title}
                               </div>
                             );
                           }
-                          
+
                           return (
                             <NavLink
                               key={item.title}
@@ -368,23 +414,35 @@ export function AppHeader() {
 
             {/* Workspace Toggle */}
             <div className="hidden lg:flex items-center gap-3 px-3 py-2 bg-muted/50 rounded-full">
-              <span className={`text-xs font-medium transition-colors ${workspace === 'personal' ? 'text-primary' : 'text-muted-foreground'}`}>
+              <span
+                className={`text-xs font-medium transition-colors ${
+                  workspace === "personal"
+                    ? "text-primary"
+                    : "text-muted-foreground"
+                }`}
+              >
                 Meu Espaço
               </span>
               <Switch
-                checked={workspace === 'business'}
+                checked={workspace === "business"}
                 onCheckedChange={handleWorkspaceToggle}
                 className="data-[state=checked]:bg-primary"
               />
-              <span className={`text-xs font-medium transition-colors ${workspace === 'business' ? 'text-primary' : 'text-muted-foreground'}`}>
+              <span
+                className={`text-xs font-medium transition-colors ${
+                  workspace === "business"
+                    ? "text-primary"
+                    : "text-muted-foreground"
+                }`}
+              >
                 Meu Negócio
               </span>
             </div>
-            
+
             {/* Mobile Workspace Toggle */}
             <div className="lg:hidden flex items-center">
               <Switch
-                checked={workspace === 'business'}
+                checked={workspace === "business"}
                 onCheckedChange={handleWorkspaceToggle}
                 className="data-[state=checked]:bg-primary"
               />
@@ -409,29 +467,39 @@ export function AppHeader() {
             {/* Menu do usuário */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2 px-3">
+                <Button
+                  variant="ghost"
+                  className="flex items-center gap-2 px-3"
+                >
                   <div className="w-6 h-6 bg-knumbers-danger rounded-sm flex items-center justify-center">
                     <span className="text-white font-bold text-xs">A</span>
                   </div>
                   <span className="hidden sm:block text-sm font-medium">
-                    {profile?.full_name || 'AVALON–ALUIZIO'}
+                    {profile?.full_name || "AVALON–ALUIZIO"}
                   </span>
                   <ChevronDown className="h-3 w-3" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <div className="px-2 py-1.5">
-                  <p className="text-sm font-medium">{profile?.full_name || 'Usuário'}</p>
-                  <p className="text-xs text-muted-foreground">{profile?.email}</p>
-                  {profile && (() => {
-                    const roleInfo = getRoleInfo();
-                    return (
-                      <Badge className={`${roleInfo.color} text-white border-0 text-xs mt-1`}>
-                        <roleInfo.icon className="h-3 w-3 mr-1" />
-                        {roleInfo.label}
-                      </Badge>
-                    );
-                  })()}
+                  <p className="text-sm font-medium">
+                    {profile?.full_name || "Usuário"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {profile?.email}
+                  </p>
+                  {profile &&
+                    (() => {
+                      const roleInfo = getRoleInfo();
+                      return (
+                        <Badge
+                          className={`${roleInfo.color} text-white border-0 text-xs mt-1`}
+                        >
+                          <roleInfo.icon className="h-3 w-3 mr-1" />
+                          {roleInfo.label}
+                        </Badge>
+                      );
+                    })()}
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
@@ -447,7 +515,10 @@ export function AppHeader() {
                   Trocar workspace
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-destructive" onClick={signOut}>
+                <DropdownMenuItem
+                  className="text-destructive"
+                  onClick={signOut}
+                >
                   <LogOut className="mr-2 h-4 w-4" />
                   Sair
                 </DropdownMenuItem>
