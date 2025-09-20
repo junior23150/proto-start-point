@@ -57,37 +57,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          await fetchProfile(session.user.id);
-        } else {
-          setProfile(null);
-        }
-        
-        setLoading(false);
-      }
-    );
-
-    // Check for existing session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    // Set up auth state listener FIRST (no async in callback)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      // Debug
+      // console.debug('[Auth] onAuthStateChange', { event, hasSession: !!session });
       setSession(session);
       setUser(session?.user ?? null);
-      
+
       if (session?.user) {
-        await fetchProfile(session.user.id);
+        // Defer Supabase calls to avoid deadlocks
+        setTimeout(() => {
+          fetchProfile(session.user.id);
+        }, 0);
+      } else {
+        setProfile(null);
       }
-      
+    });
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      // console.debug('[Auth] getSession resolved', { hasSession: !!session });
+      setSession(session);
+      setUser(session?.user ?? null);
+
+      if (session?.user) {
+        // No await here to avoid blocking
+        fetchProfile(session.user.id);
+      } else {
+        setProfile(null);
+      }
+
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
-
   const signUp = async (email: string, password: string) => {
     const redirectUrl = `${window.location.origin}/`;
     
