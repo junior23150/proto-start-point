@@ -13,7 +13,6 @@ import { AccountsCard } from "./cards/AccountsCard";
 import { CategoryPieCard } from "./cards/CategoryPieCard";
 import { CategoryGoalsCard } from "./cards/CategoryGoalsCard";
 import { InsightsCard } from "./cards/InsightsCard";
-import { BusinessFeatures } from "./BusinessFeatures";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -131,9 +130,6 @@ export function MainDashboard() {
 
       {/* Main Content Grid */}
       <div className="space-y-4 sm:space-y-6 px-0 sm:px-2">
-        {/* Business Features - Only shows for business/admin users */}
-        <BusinessFeatures />
-        
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
           {/* First Row */}
           <AccountsCard />
