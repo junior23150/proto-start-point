@@ -53,8 +53,6 @@ interface Transaction {
   updated_at: string;
 }
 
-// Dados mockados removidos - usando apenas dados reais do Supabase
-
 export function TransactionsPage() {
   const [selectedAccount, setSelectedAccount] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -169,19 +167,7 @@ export function TransactionsPage() {
     .filter((t) => t.transaction_type === "expense")
     .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
-  const currentAccountBalance = 0; // TODO: Calcular saldo real das contas do Supabase
-
-  // Calcular valor das transações selecionadas corretamente (receitas - despesas)
-  const selectedTransactionsValue = selectedTransactions.reduce((sum, id) => {
-    const transaction = filteredTransactions.find(t => t.id === id);
-    if (!transaction) return sum;
-    
-    if (transaction.transaction_type === "income") {
-      return sum + transaction.amount;
-    } else {
-      return sum - Math.abs(transaction.amount);
-    }
-  }, 0);
+  const currentAccountBalance = 0;
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -243,7 +229,6 @@ export function TransactionsPage() {
   // Apply date filter
   const applyDateFilter = () => {
     if (showCustomRange && customRangeFrom && customRangeTo) {
-      // Garantir que a data inicial seja o início do dia e a final seja o fim do dia
       const fromDate = new Date(customRangeFrom.getFullYear(), customRangeFrom.getMonth(), customRangeFrom.getDate(), 0, 0, 0, 0);
       const toDate = new Date(customRangeTo.getFullYear(), customRangeTo.getMonth(), customRangeTo.getDate(), 23, 59, 59, 999);
       
@@ -269,95 +254,6 @@ export function TransactionsPage() {
     setCustomRangeTo(undefined);
   };
 
-  // Handle transaction selection
-  const handleTransactionSelect = (transactionId: string) => {
-    setSelectedTransactions(prev => 
-      prev.includes(transactionId) 
-        ? prev.filter(id => id !== transactionId)
-        : [...prev, transactionId]
-    );
-  };
-
-  // Handle select all transactions
-  const handleSelectAll = () => {
-    if (selectedTransactions.length === filteredTransactions.length) {
-      setSelectedTransactions([]);
-    } else {
-      setSelectedTransactions(filteredTransactions.map(t => t.id));
-    }
-  };
-
-  // Handle delete selected transactions
-  const handleDeleteSelected = async () => {
-    if (selectedTransactions.length === 0) return;
-    
-    try {
-      const { error } = await supabase
-        .from('transactions')
-        .delete()
-        .in('id', selectedTransactions);
-      
-      if (error) throw error;
-      
-      setTransactions(prev => prev.filter(t => !selectedTransactions.includes(t.id)));
-      setSelectedTransactions([]);
-      
-      toast({
-        title: "Transações excluídas",
-        description: `${selectedTransactions.length} transação(ões) foram excluídas com sucesso.`,
-      });
-    } catch (error) {
-      console.error('Error deleting transactions:', error);
-      toast({
-        title: "Erro ao excluir transações",
-        description: "Não foi possível excluir as transações selecionadas.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // Handle category update
-  const handleCategoryUpdate = async (transactionId: string, newCategory: string) => {
-    try {
-      const { error } = await supabase
-        .from('transactions')
-        .update({ category: newCategory })
-        .eq('id', transactionId);
-      
-      if (error) throw error;
-      
-      setTransactions(prev => 
-        prev.map(t => 
-          t.id === transactionId 
-            ? { ...t, category: newCategory }
-            : t
-        )
-      );
-      
-      setEditingCategory(null);
-      
-      toast({
-        title: "Categoria atualizada",
-        description: "A categoria da transação foi atualizada com sucesso.",
-      });
-    } catch (error) {
-      console.error('Error updating category:', error);
-      toast({
-        title: "Erro ao atualizar categoria",
-        description: "Não foi possível atualizar a categoria da transação.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // Handle export to Excel
-  const handleExportToExcel = () => {
-    toast({
-      title: "Em desenvolvimento",
-      description: "Funcionalidade de exportação será implementada em breve",
-    });
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-background p-6">
@@ -373,7 +269,6 @@ export function TransactionsPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="flex flex-col h-screen">
-        {/* Header */}
         <div className="bg-white border-b border-border p-4 lg:p-6 flex-shrink-0">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4 gap-4">
             <div className="flex flex-col lg:flex-row lg:items-center gap-4">
@@ -386,7 +281,6 @@ export function TransactionsPage() {
                 </Badge>
               </div>
               
-              {/* Search */}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                 <Input
@@ -397,7 +291,6 @@ export function TransactionsPage() {
                 />
               </div>
 
-              {/* Date Filter */}
               <Popover open={showCalendar} onOpenChange={setShowCalendar}>
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="rounded-xl border-dashed">
@@ -431,15 +324,6 @@ export function TransactionsPage() {
                           />
                         </div>
                       </div>
-                      {showCustomRange && (
-                        <div className="px-4 pb-3 text-center">
-                          <p className="text-xs text-muted-foreground">
-                            {!customRangeFrom && !customRangeTo && "Selecione a data inicial e final"}
-                            {customRangeFrom && !customRangeTo && "Agora selecione a data final"}
-                            {customRangeFrom && customRangeTo && "Datas selecionadas! Clique em Filtrar"}
-                          </p>
-                        </div>
-                      )}
                     ) : (
                       <CalendarComponent
                         mode="range"
@@ -520,6 +404,16 @@ export function TransactionsPage() {
                     </div>
                   </div>
                   
+                  {showCustomRange && (
+                    <div className="px-4 pb-3 text-center">
+                      <p className="text-xs text-muted-foreground">
+                        {!customRangeFrom && !customRangeTo && "Selecione a data inicial e final"}
+                        {customRangeFrom && !customRangeTo && "Agora selecione a data final"}
+                        {customRangeFrom && customRangeTo && "Datas selecionadas! Clique em Filtrar"}
+                      </p>
+                    </div>
+                  )}
+                  
                   <div className="flex gap-2 p-3 border-t bg-muted/30">
                     <Button
                       variant="outline"
@@ -542,12 +436,10 @@ export function TransactionsPage() {
               </Popover>
             </div>
             
-            {/* Action Buttons - Moved to right */}
-            <div className={`flex items-center gap-2 ${sidebarCollapsed ? 'mr-16' : 'mr-60'}`}>
+            <div className="flex items-center gap-2">
               <Button 
                 variant="outline" 
                 size="sm"
-                onClick={handleExportToExcel}
                 className="rounded-xl"
               >
                 <Download className="mr-2 h-4 w-4" />
@@ -572,7 +464,6 @@ export function TransactionsPage() {
             </div>
           </div>
 
-          {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
             <Card>
               <CardContent className="p-4">
@@ -639,7 +530,6 @@ export function TransactionsPage() {
             </Card>
           </div>
 
-          {/* Filters and Account Selection */}
           <div className="flex flex-col lg:flex-row gap-4 mb-4">
             <div className="flex gap-2">
               <Button
@@ -676,37 +566,12 @@ export function TransactionsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todas as contas</SelectItem>
-                  {/* TODO: Carregar contas reais do Supabase */}
                 </SelectContent>
               </Select>
             </div>
           </div>
-
-          {/* Bulk Actions */}
-          {selectedTransactions.length > 0 && (
-            <div className="flex items-center gap-4 p-3 bg-muted/50 rounded-xl mb-4">
-              <span className="text-sm text-muted-foreground">
-                {selectedTransactions.length} transação(ões) selecionada(s)
-              </span>
-              <span className="text-sm font-medium">
-                Valor: {formatCurrency(selectedTransactionsValue)}
-              </span>
-              <div className="flex gap-2 ml-auto">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleDeleteSelected}
-                  className="rounded-xl text-red-600 border-red-200 hover:bg-red-50"
-                >
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Excluir
-                </Button>
-              </div>
-            </div>
-          )}
         </div>
 
-        {/* Main Content */}
         <div className="flex-1 overflow-hidden">
           <div className="h-full p-4 lg:p-6">
             {filteredTransactions.length === 0 ? (
@@ -723,115 +588,36 @@ export function TransactionsPage() {
               <Card className="h-full">
                 <CardContent className="p-0 h-full">
                   <div className="overflow-auto h-full">
-                    {/* Table Header */}
-                    <div className="sticky top-0 bg-muted/30 border-b p-4">
-                      <div className="flex items-center gap-4">
-                        <Checkbox
-                          checked={selectedTransactions.length === filteredTransactions.length}
-                          onCheckedChange={handleSelectAll}
-                          className="rounded"
-                        />
-                        <div className="grid grid-cols-12 gap-4 w-full text-sm font-medium text-muted-foreground">
-                          <div className="col-span-3">Descrição</div>
-                          <div className="col-span-2">Categoria</div>
-                          <div className="col-span-2">Data</div>
-                          <div className="col-span-2">Valor</div>
-                          <div className="col-span-2">Tipo</div>
-                          <div className="col-span-1">Ações</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Table Body */}
                     <div className="divide-y">
                       {filteredTransactions.map((transaction) => (
                         <div
                           key={transaction.id}
                           className="p-4 hover:bg-muted/20 transition-colors"
                         >
-                          <div className="flex items-center gap-4">
-                            <Checkbox
-                              checked={selectedTransactions.includes(transaction.id)}
-                              onCheckedChange={() => handleTransactionSelect(transaction.id)}
-                              className="rounded"
-                            />
-                            <div className="grid grid-cols-12 gap-4 w-full text-sm">
-                              <div className="col-span-3">
-                                <p className="font-medium text-foreground">
-                                  {transaction.description}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                  {transaction.source}
-                                </p>
-                              </div>
-                              <div className="col-span-2">
-                                {editingCategory === transaction.id ? (
-                                  <Select
-                                    value={transaction.category || ""}
-                                    onValueChange={(value) => handleCategoryUpdate(transaction.id, value)}
-                                  >
-                                    <SelectTrigger className="h-8 text-xs">
-                                      <SelectValue placeholder="Categoria" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      {categories.map((category) => (
-                                        <SelectItem key={category} value={category}>
-                                          {category}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                ) : (
-                                  <div className="flex items-center gap-2">
-                                    <Badge variant="secondary" className="text-xs">
-                                      {transaction.category || "Sem categoria"}
-                                    </Badge>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => setEditingCategory(transaction.id)}
-                                      className="h-6 w-6 p-0 rounded-full"
-                                    >
-                                      <Edit className="h-3 w-3" />
-                                    </Button>
-                                  </div>
-                                )}
-                              </div>
-                              <div className="col-span-2">
-                                <p className="text-foreground">
-                                  {format(new Date(transaction.date), "dd/MM/yyyy", { locale: pt })}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                  {format(new Date(transaction.date), "HH:mm", { locale: pt })}
-                                </p>
-                              </div>
-                              <div className="col-span-2">
-                                <p className={`font-medium ${
-                                  transaction.transaction_type === "income" 
-                                    ? "text-green-600" 
-                                    : "text-red-600"
-                                }`}>
-                                  {transaction.transaction_type === "income" ? "+" : "-"}
-                                  {formatCurrency(Math.abs(transaction.amount))}
-                                </p>
-                              </div>
-                              <div className="col-span-2">
-                                <Badge 
-                                  variant={transaction.transaction_type === "income" ? "default" : "destructive"}
-                                  className="text-xs"
-                                >
-                                  {transaction.transaction_type === "income" ? "Receita" : "Despesa"}
-                                </Badge>
-                              </div>
-                              <div className="col-span-1">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 w-8 p-0 rounded-full"
-                                >
-                                  <Trash2 className="h-4 w-4 text-muted-foreground" />
-                                </Button>
-                              </div>
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-medium text-foreground">
+                                {transaction.description}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {format(new Date(transaction.date), "dd/MM/yyyy HH:mm", { locale: pt })}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className={`font-medium ${
+                                transaction.transaction_type === "income" 
+                                  ? "text-green-600" 
+                                  : "text-red-600"
+                              }`}>
+                                {transaction.transaction_type === "income" ? "+" : "-"}
+                                {formatCurrency(Math.abs(transaction.amount))}
+                              </p>
+                              <Badge 
+                                variant={transaction.transaction_type === "income" ? "default" : "destructive"}
+                                className="text-xs"
+                              >
+                                {transaction.transaction_type === "income" ? "Receita" : "Despesa"}
+                              </Badge>
                             </div>
                           </div>
                         </div>
@@ -845,7 +631,6 @@ export function TransactionsPage() {
         </div>
       </div>
 
-      {/* Transfer Modal */}
       {showTransferModal && <TransferSlideIn onClose={() => setShowTransferModal(false)} />}
     </div>
   );
