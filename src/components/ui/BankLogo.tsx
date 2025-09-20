@@ -1,34 +1,23 @@
 import React from "react";
 import { Building2 } from "lucide-react";
 
-// Importações das imagens dos logos
-import nubankLogo from "/public/bank-logos/nubank.png";
-import santanderLogo from "/public/bank-logos/santander.png";
-import itauLogo from "/public/bank-logos/itau.png";
-import bancoBrasilLogo from "/public/bank-logos/banco-do-brasil.png";
-import caixaLogo from "/public/bank-logos/caixa.png";
-import sicrediLogo from "/public/bank-logos/sicredi.png";
-import sicoobLogo from "/public/bank-logos/sicoob.png";
-import bradescoLogo from "/public/bank-logos/bradesco.jpg";
-import interLogo from "/public/bank-logos/inter.png";
-
 interface BankLogoProps {
   bankName: string;
   size?: "sm" | "md" | "lg";
   className?: string;
 }
 
-// Mapeamento dos nomes dos bancos para as imagens importadas
+// Mapeamento dos nomes dos bancos para URLs diretas das imagens
 const bankLogos: Record<string, string> = {
-  Nubank: nubankLogo,
-  Santander: santanderLogo,
-  Itaú: itauLogo,
-  "Banco do Brasil": bancoBrasilLogo,
-  Caixa: caixaLogo,
-  Sicredi: sicrediLogo,
-  Sicoob: sicoobLogo,
-  Bradesco: bradescoLogo,
-  Inter: interLogo,
+  Nubank: "/bank-logos/nubank.png",
+  Santander: "/bank-logos/santander.png",
+  Itaú: "/bank-logos/itau.png",
+  "Banco do Brasil": "/bank-logos/banco-do-brasil.png",
+  Caixa: "/bank-logos/caixa.png",
+  Sicredi: "/bank-logos/sicredi.png",
+  Sicoob: "/bank-logos/sicoob.png",
+  Bradesco: "/bank-logos/bradesco.jpg",
+  Inter: "/bank-logos/inter.png",
   // "Outros": não há arquivo, usará fallback
 };
 
