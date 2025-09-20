@@ -53,34 +53,66 @@ interface MenuSection {
   }[];
 }
 
-const menuSections: Record<string, MenuSection> = {
-  cadastros: {
-    title: "Cadastros",
-    items: [
-      { title: "Pacientes", url: "/pacientes", icon: Users },
-      { title: "Agenda", url: "/agenda", icon: Calendar },
-      { title: "Marcar Consulta", url: "/marcar-consulta", icon: CalendarPlus },
-    ],
-  },
-  financeiro: {
-    title: "Financeiro",
-    items: [
-      { title: "Contas", url: "/contas", icon: CreditCard },
-      { title: "Transações", url: "/transações", icon: ArrowUpDown },
-      { title: "Planejamento - Empresa", url: "/planejamento-empresa", icon: Building2 },
-      { title: "Planejamento - Pessoal", url: "/planejamento-pessoal", icon: User },
-      { title: "Objetivos", url: "/objetivos", icon: Target },
-      { title: "Pagamentos", url: "/pagamentos", icon: Receipt },
-    ],
-  },
-  meuEspaco: {
-    title: "Meu Espaço",
-    items: [
-      { title: "Organizador", url: "/organizador", icon: FolderKanban },
-      { title: "Falar com Consultoria", url: "/consultoria", icon: MessageCircle },
-      { title: "Configurações", url: "/configuracoes", icon: Settings },
-    ],
-  },
+const getMenuSections = (workspace: string): Record<string, MenuSection> => {
+  if (workspace === 'business') {
+    return {
+      cadastros: {
+        title: "Cadastros",
+        items: [
+          { title: "Pacientes", url: "/pacientes", icon: Users },
+          { title: "Agenda", url: "/agenda", icon: Calendar },
+          { title: "Marcar Consulta", url: "/marcar-consulta", icon: CalendarPlus },
+        ],
+      },
+      financeiro: {
+        title: "Financeiro",
+        items: [
+          { title: "Contas", url: "/contas", icon: CreditCard },
+          { title: "Transações", url: "/transações", icon: ArrowUpDown },
+          { title: "Planejamento - Empresa", url: "/planejamento-empresa", icon: Building2 },
+          { title: "Planejamento - Pessoal", url: "/planejamento-pessoal", icon: User },
+          { title: "Objetivos", url: "/objetivos", icon: Target },
+          { title: "Pagamentos", url: "/pagamentos", icon: Receipt },
+        ],
+      },
+      meuEspaco: {
+        title: "Meu Espaço",
+        items: [
+          { title: "Organizador", url: "/organizador", icon: FolderKanban },
+          { title: "Falar com Consultoria", url: "/consultoria", icon: MessageCircle },
+          { title: "Configurações", url: "/configuracoes", icon: Settings },
+        ],
+      },
+    };
+  } else {
+    // Personal workspace
+    return {
+      cadastros: {
+        title: "Cadastros",
+        items: [
+          { title: "Contas Bancárias", url: "/contas", icon: CreditCard },
+          { title: "Categorias", url: "/categorias", icon: Target },
+        ],
+      },
+      financeiro: {
+        title: "Financeiro",
+        items: [
+          { title: "Transações", url: "/transações", icon: ArrowUpDown },
+          { title: "Planejamento - Pessoal", url: "/planejamento-pessoal", icon: User },
+          { title: "Objetivos", url: "/objetivos", icon: Target },
+          { title: "Pagamentos", url: "/pagamentos", icon: Receipt },
+        ],
+      },
+      meuEspaco: {
+        title: "Meu Espaço",
+        items: [
+          { title: "Organizador", url: "/organizador", icon: FolderKanban },
+          { title: "Falar com Consultoria", url: "/consultoria", icon: MessageCircle },
+          { title: "Configurações", url: "/configuracoes", icon: Settings },
+        ],
+      },
+    };
+  }
 };
 
 export function AppHeader() {
@@ -139,6 +171,8 @@ export function AppHeader() {
     return location.pathname === url;
   };
 
+  const menuSections = getMenuSections(workspace);
+  
   const isDropdownActive = (sectionKey: string) => {
     return menuSections[sectionKey].items.some(item => isActiveRoute(item.url));
   };
